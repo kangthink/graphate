@@ -1,0 +1,31 @@
+{
+  "name": "graphate",
+  "version": "0.1.0",
+  "description": "",
+  "keywords": [
+    "graph",
+    "ngraph",
+    "plugin",
+    "node"
+  ],
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "example:ngraph": "cd examples/ngraph && npx webpack && npx webpack-dev-server"
+  },
+  "author": {
+    "name": "Alex",
+    "email": "kangthink@gmail.com"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "ngraph.graph": "0.0.18",
+    "ngraph.pixel": "^2.4.1"
+  },
+  "devDependencies": {
+    "jest": "^24.7.1",
+    "webpack": "^4.30.0",
+    "webpack-cli": "^3.3.1",
+    "webpack-dev-server": "^3.3.1"
+  }
+}
