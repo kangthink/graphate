@@ -11,7 +11,8 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "example:ngraph": "cd examples/ngraph && npx webpack && npx webpack-dev-server"
+    "example:ngraph": "cd examples/ngraph && npx webpack && npx webpack-dev-server",
+    "example:grammar": "cd examples/grammar && npx webpack && npx webpack-dev-server --hot"
   },
   "author": {
     "name": "Alex",

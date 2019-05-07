@@ -1,12 +1,12 @@
-// ngraphBuilderPlugin.js
+// grammarBuilderPlugin.js
 
 const createGraph = require('ngraph.graph')
 
-function NgraphBuilderPlugin() {
+function GrammarBuilderPlugin() {
   const name = 'NgraphBuilderPlugin'
 }
 
-NgraphBuilderPlugin.prototype.apply = function(ctx) {
+GrammarBuilderPlugin.prototype.apply = function(ctx) {
 
   const graph = createGraph()
   
@@ -16,12 +16,12 @@ NgraphBuilderPlugin.prototype.apply = function(ctx) {
 
   ctx.data.edges.forEach(edge => {
     // const { startNode, endNode } = edge
-    graph.addLink(edge[0], edge[1])
+    graph.addLink(edge[0], edge[1], edge[2])
   })
 
   ctx.graph = graph
 }
 
 module.exports = {
-  NgraphBuilderPlugin
+    GrammarBuilderPlugin
 }

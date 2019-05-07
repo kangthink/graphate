@@ -1,0 +1,1 @@
+// googleDocsLoaderPlugin.js
