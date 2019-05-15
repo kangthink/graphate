@@ -5,7 +5,7 @@ const viva = require('./ngraphVivaGraph')
 
 function svgText(width, height, text) {
   return viva.Graph.svg('text').text(text)
-  .attr('fill', 'red')
+  .attr('fill', 'white')
   .attr('text-anchor', 'middle')
   .attr('width', width)
   .attr('height', height)
@@ -15,6 +15,7 @@ function svgRect(width, height) {
   return viva.Graph.svg('rect')
   .attr('width', width)
   .attr('height', height)
+  .attr('fill', '#35b26f')
   .attr('x', -(width/2))
   .attr('y', -(height/2))
 }
@@ -34,7 +35,7 @@ const graphics = (function(){
   let grp = viva.Graph.View.svgGraphics()
   grp
     .node(function(node) {
-      return svgConceptGroup(node.id, node.data.in, node.data.in, 15)
+      return svgConceptGroup(node.id, node.data.in, node.data.in, 3)
     })
     .placeNode(function(nodeUI, pos){
       if (nodeUI.tagName == 'g') {
@@ -53,15 +54,29 @@ const graphics = (function(){
     return grp
 })()
 
+
+const layout = function(graph) {
+  const l = viva.Graph.Layout.forceDirected(graph, {
+    springLength : 10,
+    springCoeff : 0.005,
+    dragCoeff : 0.02,
+    gravity : -1.2
+  })
+  
+  return l
+}
+
 function GrammarRenderPlugin(document, id) {
   this.document = document
   this.id = id
 }
 
 GrammarRenderPlugin.prototype.apply = function(ctx) {
+  console.log(ctx)
   const renderer = viva.Graph.View.renderer(ctx.graph, {
     container: this.document.getElementById(this.id),
-    graphics: graphics
+    graphics: graphics,
+    laytout: layout(ctx.graph)
   })
 
   renderer.run()

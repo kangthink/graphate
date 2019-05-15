@@ -1,10 +1,15 @@
-// grammarBuilderPlugin.js
+/**
+ * Copyright Taehoon Kang All Rights Reserved.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+ 'use strict'
 
 const createGraph = require('ngraph.graph')
 
-function GrammarBuilderPlugin() {
-  const name = 'NgraphBuilderPlugin'
-}
+function GrammarBuilderPlugin() {}
 
 GrammarBuilderPlugin.prototype.apply = function(ctx) {
 
@@ -15,8 +20,8 @@ GrammarBuilderPlugin.prototype.apply = function(ctx) {
   })
 
   ctx.data.edges.forEach(edge => {
-    // const { startNode, endNode } = edge
-    graph.addLink(edge[0], edge[1], edge[2])
+    const [start, end, weight] = edge
+    graph.addLink(start, end, weight)
   })
 
   ctx.graph = graph

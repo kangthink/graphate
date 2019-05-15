@@ -12,7 +12,7 @@
   "scripts": {
     "test": "jest",
     "example:ngraph": "cd examples/ngraph && npx webpack && npx webpack-dev-server",
-    "example:grammar": "cd examples/grammar && npx webpack && npx webpack-dev-server --hot"
+    "example:grammar": "cd examples/grammar && npx webpack && npx webpack-dev-server --host 0.0.0.0 --port 80"
   },
   "author": {
     "name": "Alex",
@@ -20,6 +20,8 @@
   },
   "license": "MIT",
   "dependencies": {
+    "axios": "^0.18.0",
+    "csv-load-sync": "^1.0.0",
     "ngraph.graph": "0.0.18",
     "ngraph.pixel": "^2.4.1"
   },
