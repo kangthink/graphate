@@ -81,8 +81,8 @@ const axios = require('axios');
 
 window.onload = function() {
 
-  // const link = prompt("Please enter url to fetch data from", "https://sheetdb.io/api/v1/n1xo2irsf4ozs")
-  const link = prompt("Please enter url to fetch data from", "https://sheetdb.io/api/v1/5a69huu6aklvt")
+  const testLink = "https://sheetdb.io/api/v1/n1xo2irsf4ozs"
+  const link = prompt("Please enter url to fetch data from", testLink)
   axios.get(link).then(res => {
     const { data } = res
 
