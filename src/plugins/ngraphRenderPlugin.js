@@ -1,23 +1,23 @@
-// ngraphrenderPlugin.js
+/**
+ * Copyright Taehoon Kang All Rights Reserved.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
-const viva = require('./ngraphVivaGraph')
-
-
+const viva = require('../render/ngraphVivaGraph')
 
 // Set custom nodes appearance
-const graphics = viva.Graph.View.svgGraphics();
+const graphics = viva.Graph.View.svgGraphics()
 graphics.node(function(node) {
-       // The function is called every time renderer needs a ui to display node
-       return viva.Graph.svg('text')
-             .attr('width', 24)
-             .attr('height', 24)
-             .text(node.data.state); // node.data holds custom object passed to graph.addNode();
-    })
-    .placeNode(function(nodeUI, pos){
-        // Shift image to let links go to the center:
-        nodeUI.attr('x', pos.x - 12).attr('y', pos.y - 12);
-    })
-
+  return viva.Graph.svg('text')
+    .attr('width', 24)
+    .attr('height', 24)
+    .text(node.data.state)
+})
+  .placeNode(function(nodeUI, pos){
+    nodeUI.attr('x', pos.x - 12).attr('y', pos.y - 12);
+})
 
 
 function NgraphRenderPlugin(document, id) {

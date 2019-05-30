@@ -14,29 +14,65 @@
  * e.g. [{ k1: "concept1, concept2" }, { k1: "concept3, concept4"}]
  * 
  */
-function GrammarTargetParserPlugin(fromKey) {
+function GrammarTargetAndTestParserPlugin(fromKey) {
   this.fromKey = fromKey
   this.toKey = 'target'
 }
 
-GrammarTargetParserPlugin.prototype.apply = function(ctx) {
-
+GrammarTargetAndTestParserPlugin.prototype.apply = function(ctx) {
   if (!Array.isArray(ctx.data)) {
     throw new Error('Array should be set on context\'s data property to use this plugin')
   }
-    
+
   const loadedData = ctx.data.slice()
   const parsedData = loadedData.map(obj => {
     const strTarget = obj[this.fromKey]
     const arrTarget = strTarget.split(",").map(t => { return t.trim() })
-    return { [this.toKey]: arrTarget }
+    return { 
+      [this.toKey]: arrTarget,
+      tests: extractTests(obj)
+    }
   })
 
-  let node_ids = extractNodeIds(parsedData)
+  let nodeIds = extractNodeIds(parsedData)
   let edges = extractEdges(parsedData)
-  let nodes = buildNodes(node_ids, edges)
+  let testsForNodes = buildTestsForNodes(parsedData)
+  let nodes = buildNodes(nodeIds, edges, testsForNodes)
 
   ctx.data = { nodes, edges }
+}
+
+
+
+function extractTests(row) {
+
+  let result = []
+
+  function keyForTest(key) {
+    return key.includes('9급')
+  }
+
+  for (let key in row) {
+    if (keyForTest(key)) {
+      if (row[key] !== "") {
+
+        if (row[key].includes(',')) {
+          //
+          const qgs = row[key].split(',')
+          qgs.forEach(qg => {
+            const s = `${key}: ${qg}`
+            result.push(s)
+          })
+
+        } else {
+          const s = `${key}: ${row[key]}`
+          result.push(s)
+        }
+      }
+    }
+  }
+
+  return result
 }
 
 function extractNodeIds(parsedData) {
@@ -48,11 +84,9 @@ function extractNodeIds(parsedData) {
       nodeSet.add(t)
     })
   })
-
   return Array.from(nodeSet)
 }
 
-// each edge is an array as [start, end, count]
 function extractEdges(parsedData) {
   const data = parsedData.slice()
 
@@ -94,24 +128,44 @@ function extractEdges(parsedData) {
   return reduced
 }
 
-function buildNodes(nodeIds, edges) {
+function isLastElement(index, arr) {
+  return (Number(index) +1 == arr.length) ? true : false
+}
+
+function buildTestsForNodes(parsedData) {
+  const data = parsedData.slice()
+
+  let result = {}
+
+  for (let idx in data) {
+    const row = data[idx]
+    const leaf = row.target.slice(-1)[0]
+    result[leaf] = row.tests  
+  }
+
+  return result
+}
+
+function buildNodes(nodeIds, edges, testsForNodes) {
   let constructedNodes = nodeIds.map(id => {
-    return { "id": id, "data": { in: 0 }}
+    return { 
+      "id": id,
+      "data": {
+        in: 0,
+        tests: null
+      }
+    }
   })
+
   for (let index in edges) {
     const edge = edges[index]
     pushWeight(constructedNodes,edge)
+    pushTests(constructedNodes, testsForNodes)
   }
  
   return constructedNodes
 }
 
-
-function isLastElement(index, arr) {
-  return (Number(index) +1 == arr.length) ? true : false
-}
-
-// finds the same edge and increases the weight
 function pushWeight(nodes, edge) {
   const [start, _, weight] = edge
   for (let idx in nodes) {
@@ -121,6 +175,16 @@ function pushWeight(nodes, edge) {
   }
 }
 
+function pushTests(nodes, tests) {
+  for (let idx in nodes) {
+    if (tests.hasOwnProperty(nodes[idx].id)) {
+      // console.log(nodes.data)
+      
+      nodes[idx].data.tests = tests[nodes[idx].id]
+    }
+  }
+}
+
 module.exports = {
-  GrammarTargetParserPlugin
+  GrammarTargetAndTestParserPlugin
 }

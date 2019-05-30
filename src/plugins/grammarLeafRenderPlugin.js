@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
- 'use strict'
+'use strict'
 
 const viva = require('../render/ngraphVivaGraph')
 
@@ -19,7 +19,8 @@ const graphics = (function(){
   let grp = viva.Graph.View.svgGraphics()
   grp
     .node(function(node) {
-      return svgConceptGroup(node.id, node.data.in, node.data.in, 3)
+      const length = node.data.tests ? node.data.tests.length * 3 : 1
+      return svgConceptGroup(node.data, node.id, length, length, 3)
     })
     .placeNode(function(nodeUI, pos){
       if (nodeUI.tagName == 'g') {
@@ -33,7 +34,7 @@ const graphics = (function(){
     .link(function(edge) {
       return viva.Graph.svg("line")
         .attr("stroke", linkColor)
-        .attr("stroke-width", edge.data)
+        .attr("stroke-width", 1)
     })
     return grp
 })()
@@ -50,12 +51,12 @@ const layout = function(graph) {
   return l
 }
 
-function GrammarRenderPlugin(document, id) {
+function GrammarLeafRenderPlugin(document, id) {
   this.document = document
   this.id = id
 }
 
-GrammarRenderPlugin.prototype.apply = function(ctx) {
+GrammarLeafRenderPlugin.prototype.apply = function(ctx) {
   const renderer = viva.Graph.View.renderer(ctx.graph, {
     container: this.document.getElementById(this.id),
     graphics: graphics,
@@ -65,15 +66,19 @@ GrammarRenderPlugin.prototype.apply = function(ctx) {
 }
 
 // helper functions
-function svgConceptGroup(text, width, height, factor=1) {
+function svgConceptGroup(data, text, width, height, factor=1) {
   const group = viva.Graph.svg('g')
 
-  let resizedWidth = factor * (width + 1)
-  let resizedHeight = factor * (height + 1)
-  group.appendChild(svgRect(resizedWidth, resizedHeight))
-  group.appendChild(svgText(resizedWidth, resizedHeight, text))
+  // console.log(data)
+  group.appendChild(svgRect(width, height))
+  group.appendChild(svgText(width, height, text))
   // debugger
-  group.addEventListener('click', function() {console.log('clicked')})
+  group.addEventListener('click', function() {
+    const t = data.tests ? data.tests.join('\n') : '해당 타겟에 대한 문제 없음'
+
+    document.getElementById('tests').innerText = text + '\n' + t
+    // alert(t)
+  })
   return group
 }
 
@@ -87,6 +92,7 @@ function svgText(width, height, text) {
 }
 
 function svgRect(width, height) {
+
   return viva.Graph.svg('rect')
   .attr('width', width)
   .attr('height', height)
@@ -98,5 +104,5 @@ function svgRect(width, height) {
 }
 
 module.exports = {
-  GrammarRenderPlugin
+  GrammarLeafRenderPlugin
 }

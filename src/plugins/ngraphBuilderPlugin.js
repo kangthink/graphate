@@ -1,10 +1,15 @@
-// ngraphBuilderPlugin.js
+/**
+ * Copyright (c) Taehoon Kang All Rights Reserved.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+ 'use strict'
 
 const createGraph = require('ngraph.graph')
 
-function NgraphBuilderPlugin() {
-  const name = 'NgraphBuilderPlugin'
-}
+function NgraphBuilderPlugin() {}
 
 NgraphBuilderPlugin.prototype.apply = function(ctx) {
 
@@ -15,8 +20,8 @@ NgraphBuilderPlugin.prototype.apply = function(ctx) {
   })
 
   ctx.data.edges.forEach(edge => {
-    // const { startNode, endNode } = edge
-    graph.addLink(edge[0], edge[1])
+    const [startNode, endNode] = edge
+    graph.addLink(startNode, endNode)
   })
 
   ctx.graph = graph
