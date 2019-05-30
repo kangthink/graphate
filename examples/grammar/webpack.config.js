@@ -8,7 +8,8 @@ module.exports = {
     publicPath: '/dist'
   },
   devServer: {
-    open: 'Google Chrome'
+    open: 'Google Chrome',
+    openPage: './dist'
   }
 }
 
